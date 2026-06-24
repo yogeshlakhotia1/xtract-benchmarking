@@ -124,7 +124,7 @@ function sumCounts(rows) {
 }
 
 async function init() {
-  const response = await fetch("./dashboard_data.json?v=20260625-mean-sd");
+  const response = await fetch("./dashboard_data.json?v=20260625-title-gap");
   state.data = await response.json();
   if (!fieldByName(state.selectedField)) {
     state.selectedField = state.data.fields[0].field;
@@ -382,7 +382,7 @@ function renderDistributionChart() {
   );
   const width = 830;
   const left = 220;
-  const right = 44;
+  const right = 112;
   const top = 36;
   const rowHeight = 28;
   const plotWidth = width - left - right;
