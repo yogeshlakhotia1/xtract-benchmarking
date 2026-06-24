@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>V2 Extractions</title>
-    <link rel="stylesheet" href="./styles.css?v=20260625-boxplot" />
+    <link rel="stylesheet" href="./styles.css?v=20260625-mean-sd" />
   </head>
   <body>
     <header class="app-header">
@@ -30,9 +30,8 @@
             <p id="overview-context" class="section-context"></p>
           </div>
           <div class="legend">
-            <span><i class="legend-point"></i> dataset accuracy</span>
-            <span><i class="legend-box"></i> middle 50% (IQR)</span>
-            <span><i class="legend-median"></i> median</span>
+            <span><i class="legend-sd"></i> ±1 SD</span>
+            <span><i class="legend-mean"></i> dataset mean</span>
           </div>
         </div>
         <div class="overview-grid">
@@ -134,6 +133,6 @@
     </main>
 
     <div id="tooltip" class="tooltip" role="status"></div>
-    <script src="./app.js?v=20260625-boxplot"></script>
+    <script src="./app.js?v=20260625-mean-sd"></script>
   </body>
 </html>

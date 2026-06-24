@@ -14,6 +14,7 @@
   --red-tint: #fde7e9;
   --yellow: #cb8b00;
   --yellow-tint: #fff2cc;
+  --teal-dark: #016379;
   --cyan: #1d93ad;
   --cyan-tint: #edf9fb;
   --text: #2a263f;
@@ -220,28 +221,20 @@ main {
   display: inline-block;
 }
 
-.legend-point {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: var(--cyan);
-  border: 1px solid #ffffff;
-  box-shadow: 0 0 0 1px var(--cyan);
-}
-
-.legend-box {
+.legend-sd {
   width: 22px;
-  height: 10px;
-  border-radius: 4px;
-  background: var(--purple-tint);
-  border: 1px solid var(--purple-mid);
+  height: 5px;
+  border-radius: 3px;
+  background: var(--cyan);
 }
 
-.legend-median {
-  width: 3px;
-  height: 16px;
-  border-radius: 2px;
+.legend-mean {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
   background: var(--orange);
+  border: 2px solid #ffffff;
+  box-shadow: 0 0 0 1px var(--orange);
 }
 
 .overview-grid {
@@ -296,36 +289,29 @@ main {
   fill: var(--purple-tint);
 }
 
-.box-whisker,
-.box-whisker-cap {
-  stroke: var(--purple-light);
-  stroke-width: 1.5;
-}
-
-.box-iqr {
-  fill: rgba(241, 232, 253, 0.82);
-  stroke: var(--purple-mid);
-  stroke-width: 1.2;
-}
-
-.dataset-point {
-  fill: var(--cyan);
-  fill-opacity: 0.78;
-  stroke: #ffffff;
-  stroke-width: 0.9;
-  cursor: crosshair;
-}
-
-.dataset-point:hover {
-  fill: var(--deep-purple);
-  fill-opacity: 1;
-  stroke-width: 1.5;
-}
-
-.box-median {
-  stroke: var(--orange);
-  stroke-width: 3;
+.sd-range {
+  stroke: var(--cyan);
+  stroke-width: 5;
   stroke-linecap: round;
+}
+
+.sd-cap {
+  stroke: var(--teal-dark);
+  stroke-width: 1.5;
+}
+
+.mean-point {
+  fill: var(--orange);
+  stroke: #ffffff;
+  stroke-width: 1.8;
+}
+
+.distribution-row:hover .mean-point {
+  fill: var(--deep-purple);
+}
+
+.sample-weighted-label {
+  font-weight: 700;
 }
 
 .chart-axis text,
