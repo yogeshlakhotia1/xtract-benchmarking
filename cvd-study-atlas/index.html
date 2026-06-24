@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Interactive exploration dashboard for cardiovascular study metadata."
+    />
+    <title>Elucidata | Cardiovascular Study Atlas</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="top-rule"></div>
+    <header class="site-header">
+      <a class="brand" href="#top" aria-label="Elucidata Study Atlas home">
+        <span class="brand-symbol" aria-hidden="true">
+          <i></i><i></i><i></i>
+        </span>
+        <span>
+          <strong>Elucidata</strong>
+          <small>Cardiovascular Study Atlas</small>
+        </span>
+      </a>
+      <nav aria-label="Dashboard sections">
+        <a href="#overview">Landscape</a>
+        <a href="#explore">Study explorer</a>
+      </nav>
+      <div class="source-badge">
+        <span></span>
+        <strong id="source-label">Study metadata</strong>
+      </div>
+    </header>
+
+    <main id="top">
+      <section class="hero">
+        <div class="hero-copy">
+          <p class="kicker">Curated study intelligence</p>
+          <h1>Explore the shape of the <em>cardiovascular evidence</em> landscape.</h1>
+          <p class="hero-description">
+            See where the collection is concentrated, how studies were measured,
+            and what is known about each dataset—without reading 38 columns first.
+          </p>
+          <a class="primary-link" href="#explore">
+            Browse individual studies
+            <span aria-hidden="true">↓</span>
+          </a>
+        </div>
+        <div class="hero-metrics" id="hero-metrics" aria-label="Collection summary"></div>
+      </section>
+
+      <section id="overview" class="dashboard-section">
+        <div class="section-heading">
+          <div>
+            <p class="kicker">Collection pulse</p>
+            <h2>What is inside the study collection?</h2>
+          </div>
+          <p>
+            Counts are study-level. Disease and technology views are multi-label,
+            because a study may span more than one category.
+          </p>
+        </div>
+
+        <div class="overview-grid">
+          <article class="panel panel-wide timeline-panel">
+            <div class="panel-heading">
+              <div>
+                <span class="panel-number">01</span>
+                <h3>Publication activity</h3>
+              </div>
+              <p>Studies by publication year</p>
+            </div>
+            <div id="year-chart" class="chart year-chart"></div>
+          </article>
+
+          <article class="panel priority-panel">
+            <div class="panel-heading">
+              <div>
+                <span class="panel-number">02</span>
+                <h3>Priority mix</h3>
+              </div>
+            </div>
+            <div id="priority-chart" class="priority-chart"></div>
+          </article>
+
+          <article class="panel">
+            <div class="panel-heading">
+              <div>
+                <span class="panel-number">03</span>
+                <h3>Research focus</h3>
+              </div>
+              <p>Click a bar to filter studies</p>
+            </div>
+            <div id="disease-chart" class="chart ranked-chart"></div>
+          </article>
+
+          <article class="panel">
+            <div class="panel-heading">
+              <div>
+                <span class="panel-number">04</span>
+                <h3>Specimen landscape</h3>
+              </div>
+              <p>Primary specimen category</p>
+            </div>
+            <div id="tissue-chart" class="chart ranked-chart"></div>
+          </article>
+
+          <article class="panel">
+            <div class="panel-heading">
+              <div>
+                <span class="panel-number">05</span>
+                <h3>Technology mix</h3>
+              </div>
+              <p>Assay families represented</p>
+            </div>
+            <div id="technology-chart" class="chart technology-chart"></div>
+          </article>
+
+          <article class="panel coverage-panel">
+            <div class="panel-heading">
+              <div>
+                <span class="panel-number">06</span>
+                <h3>Metadata coverage</h3>
+              </div>
+              <p>How often useful fields are populated</p>
+            </div>
+            <div id="coverage-chart" class="coverage-chart"></div>
+          </article>
+        </div>
+      </section>
+
+      <section id="explore" class="dashboard-section explorer-section">
+        <div class="section-heading explorer-heading">
+          <div>
+            <p class="kicker">Study explorer</p>
+            <h2>Move from landscape to study detail.</h2>
+          </div>
+          <p>
+            Search by accession, disease, tissue, technology, author, or title.
+          </p>
+        </div>
+
+        <div class="explorer-shell">
+          <aside class="study-browser" aria-label="Study selection">
+            <div class="browser-controls">
+              <label class="search-box">
+                <span class="sr-only">Search studies</span>
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <circle cx="10.8" cy="10.8" r="6.8"></circle>
+                  <path d="m16 16 4.2 4.2"></path>
+                </svg>
+                <input
+                  id="study-search"
+                  type="search"
+                  placeholder="Search studies..."
+                  autocomplete="off"
+                />
+              </label>
+
+              <div class="filter-grid">
+                <label>
+                  <span>Priority</span>
+                  <select id="priority-filter"></select>
+                </label>
+                <label>
+                  <span>Disease</span>
+                  <select id="disease-filter"></select>
+                </label>
+                <label>
+                  <span>Specimen</span>
+                  <select id="tissue-filter"></select>
+                </label>
+                <label>
+                  <span>Technology</span>
+                  <select id="technology-filter"></select>
+                </label>
+              </div>
+
+              <div class="result-summary">
+                <strong id="result-count">0 studies</strong>
+                <button id="clear-filters" type="button">Clear filters</button>
+              </div>
+            </div>
+            <div id="study-list" class="study-list"></div>
+          </aside>
+
+          <article id="study-detail" class="study-detail" aria-live="polite"></article>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <span>Elucidata · Cardiovascular Study Atlas</span>
+      <span id="footer-source"></span>
+    </footer>
+
+    <div id="tooltip" class="tooltip" role="status"></div>
+    <script src="./dashboard_data.js"></script>
+    <script src="./app.js"></script>
+  </body>
+</html>

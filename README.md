@@ -11,3 +11,10 @@ Interactive evaluation of V2 extractions across 24 cardiovascular datasets,
 883 samples, and 31 metadata fields.
 
 [Open the CVD public-data dashboard](https://yogeshlakhotia1.github.io/xtract-benchmarking/cvd-public-data/)
+
+### Cardiovascular study atlas
+
+Interactive exploration of 56 curated cardiovascular studies, including
+disease, tissue, technology, priority, and metadata-coverage views.
+
+[Open the Cardiovascular Study Atlas](https://yogeshlakhotia1.github.io/xtract-benchmarking/cvd-study-atlas/)
