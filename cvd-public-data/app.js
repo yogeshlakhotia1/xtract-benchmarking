@@ -124,7 +124,7 @@ function sumCounts(rows) {
 }
 
 async function init() {
-  const response = await fetch("./dashboard_data.json?v=20260624-v2");
+  const response = await fetch("./dashboard_data.json?v=20260625-boxplot");
   state.data = await response.json();
   if (!fieldByName(state.selectedField)) {
     state.selectedField = state.data.fields[0].field;
@@ -380,11 +380,11 @@ function renderDistributionChart() {
   const fields = currentFieldViews().sort(
     (a, b) => a.overallAccuracy - b.overallAccuracy,
   );
-  const width = 1030;
-  const left = 235;
-  const right = 54;
+  const width = 830;
+  const left = 220;
+  const right = 44;
   const top = 36;
-  const rowHeight = 27;
+  const rowHeight = 31;
   const plotWidth = width - left - right;
   const height = top + fields.length * rowHeight + 52;
   const x = (value) => left + (Number(value) / 100) * plotWidth;
@@ -395,8 +395,10 @@ function renderDistributionChart() {
       (tick) => `
         <g class="chart-axis">
           <line x1="${x(tick)}" x2="${x(tick)}" y1="24" y2="${height - 30}" stroke="${
-            tick === 80 ? "#F78E12" : "#E9E3FC"
-          }" stroke-width="${tick === 80 ? 1.5 : 1}" />
+            tick === 80 ? "#C62828" : "#E9E3FC"
+          }" stroke-width="${tick === 80 ? 1.5 : 1}" ${
+            tick === 80 ? 'stroke-dasharray="4 4"' : ""
+          } />
           <text x="${x(tick)}" y="${height - 10}" text-anchor="middle">${tick}%</text>
         </g>
       `,
@@ -408,27 +410,51 @@ function renderDistributionChart() {
       const y = top + index * rowHeight + 12;
       const dist = field.distribution;
       const selected = field.field === state.selectedField ? "is-selected" : "";
-      const rowFill =
-        field.overallAccuracy < 80
-          ? "#C62828"
-          : field.overallAccuracy < 90
-            ? "#F78E12"
-            : "#501899";
+      const points = [...field.datasetStats]
+        .sort((a, b) => a.dataset.localeCompare(b.dataset))
+        .map((dataset, pointIndex) => {
+          const xJitter = ((pointIndex % 5) - 2) * 1.5;
+          const yJitter = ((Math.floor(pointIndex / 5) % 5) - 2) * 2.5;
+          const pointX = Math.max(
+            left,
+            Math.min(left + plotWidth, x(dataset.accuracy) + xJitter),
+          );
+          return `
+            <circle
+              class="dataset-point"
+              cx="${pointX}"
+              cy="${y + yJitter}"
+              r="3.3"
+              data-tooltip="${dataset.dataset}: ${pct(dataset.accuracy)} ${field.field} accuracy"
+            ></circle>
+          `;
+        })
+        .join("");
       return `
         <g class="distribution-row ${selected}" data-field="${field.field}" data-tooltip="${field.field}: overall ${pct(
           field.overallAccuracy,
-        )}; dataset range ${pct(dist.min)}-${pct(dist.max)}; ${field.datasetsWithDiscrepancy} datasets with discrepancies">
+        )}; median ${pct(dist.median)}; dataset range ${pct(dist.min)}-${pct(
+          dist.max,
+        )}; ${field.datasetsWithDiscrepancy} datasets with discrepancies">
           <rect class="distribution-row-bg" x="0" y="${y - 17}" width="${width}" height="${rowHeight}" rx="8"></rect>
           <text class="field-label" x="8" y="${y + 4}">${field.field}</text>
-          <line x1="${x(dist.min)}" x2="${x(dist.max)}" y1="${y}" y2="${y}" stroke="#BD8FF7" stroke-width="2" />
-          <rect x="${x(dist.q1)}" y="${y - 6}" width="${Math.max(
+          <line class="box-whisker" x1="${x(dist.min)}" x2="${x(
+            dist.max,
+          )}" y1="${y}" y2="${y}" />
+          <line class="box-whisker-cap" x1="${x(dist.min)}" x2="${x(
+            dist.min,
+          )}" y1="${y - 6}" y2="${y + 6}" />
+          <line class="box-whisker-cap" x1="${x(dist.max)}" x2="${x(
+            dist.max,
+          )}" y1="${y - 6}" y2="${y + 6}" />
+          <rect class="box-iqr" x="${x(dist.q1)}" y="${y - 7}" width="${Math.max(
             2,
             x(dist.q3) - x(dist.q1),
-          )}" height="12" rx="5" fill="#F1E8FD" stroke="#8E42EE" />
-          <line x1="${x(dist.median)}" x2="${x(dist.median)}" y1="${y - 8}" y2="${
-            y + 8
-          }" stroke="#2B0061" stroke-width="2" />
-          <circle cx="${x(field.overallAccuracy)}" cy="${y}" r="5.5" fill="${rowFill}" stroke="#FFFFFF" stroke-width="1.5" />
+          )}" height="14" rx="4" />
+          ${points}
+          <line class="box-median" x1="${x(dist.median)}" x2="${x(
+            dist.median,
+          )}" y1="${y - 10}" y2="${y + 10}" />
           <text class="accuracy-label" x="${width - 10}" y="${y + 4}" text-anchor="end">${pct(
             field.overallAccuracy,
           )}</text>
@@ -464,6 +490,19 @@ function renderDistributionChart() {
       tooltip.textContent = row.dataset.tooltip;
     });
     row.addEventListener("mouseleave", () => {
+      tooltip.style.display = "none";
+    });
+  });
+
+  document.querySelectorAll(".dataset-point").forEach((point) => {
+    point.addEventListener("mousemove", (event) => {
+      event.stopPropagation();
+      tooltip.style.display = "block";
+      tooltip.style.left = `${event.clientX + 14}px`;
+      tooltip.style.top = `${event.clientY + 14}px`;
+      tooltip.textContent = point.dataset.tooltip;
+    });
+    point.addEventListener("mouseleave", () => {
       tooltip.style.display = "none";
     });
   });
